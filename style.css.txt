@@ -1,23 +1,101 @@
+/* Reset some basic stuff */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Body Layout */
 body {
-  font-family: sans-serif;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
+  color: #f8f8f8;
+  padding: 30px 20px;
+  text-align: center;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-top: 60px;
-  background: #f8f8f8;
+  justify-content: center;
 }
 
-#startBtn {
+/* Game Title */
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #ffde59;
+}
+
+/* Display Box */
+#game-display {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid #fff2;
+  padding: 15px;
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+  border-radius: 10px;
+  white-space: pre-wrap;
+}
+
+/* Input Field */
+#word-input {
+  padding: 12px;
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #888;
+  text-align: center;
+}
+
+/* Submit Button */
+#submit-btn {
   padding: 12px 24px;
-  font-size: 18px;
-  background: #2a8eff;
+  background-color: #00c896;
   color: white;
+  font-size: 1rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 5px;
+  margin-top: 10px;
   cursor: pointer;
+  transition: background 0.3s ease;
 }
 
+#submit-btn:hover {
+  background-color: #009e78;
+}
+
+/* Optional Result Box */
 #result {
   margin-top: 20px;
-  font-size: 16px;
+  font-size: 1rem;
+  color: #ffcccb;
+}
+
+/* Footer */
+footer {
+  margin-top: auto;
+  padding-top: 30px;
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+/* Responsive for small screens */
+@media (max-width: 480px) {
+  body {
+    padding: 20px 10px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  #word-input {
+    font-size: 0.95rem;
+  }
+
+  #submit-btn {
+    width: 100%;
+    font-size: 1rem;
+  }
 }
