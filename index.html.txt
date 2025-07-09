@@ -8,11 +8,29 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-  <div id="app">
-    <h2>🔤 Welcome to Word Chain</h2>
-    <button id="startBtn">Start Game</button>
-    <div id="result"></div>
+  <h1>Word Chain Game 🧠</h1>
+
+  <div id="game-display">
+    Loading the first word…
   </div>
+
+  <input 
+    id="word-input" 
+    type="text" 
+    placeholder="Enter your word…" 
+    autocomplete="off"
+  />
+
+  <button id="submit-btn">Submit</button>
+
+  <div id="result"></div>
+
+  <footer>
+    <p style="font-size: 14px; color: gray;">
+      Powered by Telegram & Replit | Built by Yordanos 🚀
+    </p>
+  </footer>
+
   <script src="script.js"></script>
 </body>
 </html>
