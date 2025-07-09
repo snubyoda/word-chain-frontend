@@ -8,25 +8,18 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-  <h1>Word Chain Game 🧠</h1>
+  <h1>🧠 Word Chain Game</h1>
 
-  <!-- 🏆 Top 3 Leaderboard -->
-  <div id="top-leaderboard" class="leaderboard">
-    <h2>🏅 Top 3 Players</h2>
-    <ul id="leaderboard-list"></ul>
-  </div>
+  <div id="game-display">Loading the first word…</div>
 
-  <div id="game-display">Loading game…</div>
-
-  <input id="word-input" type="text" placeholder="Enter your word…" />
+  <input id="word-input" type="text" placeholder="Enter your word…" autocomplete="off" />
   <button id="submit-btn">Submit</button>
 
+  <div id="hint-box"></div>
   <div id="result"></div>
 
-  <button id="show-full-btn">Show Full Leaderboard</button>
-
   <footer>
-    <p>Powered by Telegram & Replit | Built by Yordanos 🚀</p>
+    <p>Powered by Telegram Mini App & Replit ⚡️</p>
   </footer>
 
   <script src="script.js"></script>
