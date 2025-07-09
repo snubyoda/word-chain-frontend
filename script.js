@@ -1,120 +1,85 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+const tg = window.Telegram.WebApp;
+const user = tg.initDataUnsafe.user;
 
-body {
-  font-family: 'Segoe UI', Tahoma, sans-serif;
-  background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
-  color: #f8f8f8;
-  padding: 30px 20px;
-  text-align: center;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
+const display = document.getElementById('game-display');
+const input = document.getElementById('word-input');
+const button = document.getElementById('submit-btn');
+const leaderboardList = document.getElementById('leaderboard-list');
+const result = document.getElementById('result');
 
-h1 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-  color: #ffde59;
-}
+const BACKEND_URL = 'https://d1173b1f-70b2-436a-8b74-1abd14a78577-00-36p96n6zl8fr3.worf.replit.dev'; // your Replit backend
 
-.leaderboard {
-  background: rgba(255, 255, 255, 0.08);
-  padding: 10px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-}
+async function startGame() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/start`, {
+      method: 'GET',
+      credentials: 'include'
+    });
+    const data = await res.json();
 
-.leaderboard h2 {
-  font-size: 1.2rem;
-  color: #ffe35c;
-  margin-bottom: 10px;
-}
-
-#leaderboard-list {
-  list-style: none;
-  padding-left: 0;
-}
-
-#leaderboard-list li {
-  font-size: 1rem;
-  margin: 5px 0;
-}
-
-#game-display {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid #fff2;
-  padding: 15px;
-  margin-bottom: 20px;
-  font-size: 1.1rem;
-  border-radius: 10px;
-  white-space: pre-wrap;
-}
-
-input {
-  padding: 12px;
-  width: 100%;
-  max-width: 300px;
-  margin-bottom: 10px;
-  font-size: 1rem;
-  border-radius: 5px;
-  border: 1px solid #888;
-  text-align: center;
-}
-
-button {
-  padding: 12px 24px;
-  background-color: #00c896;
-  color: white;
-  font-size: 1rem;
-  border: none;
-  border-radius: 5px;
-  margin-top: 10px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-button:hover {
-  background-color: #009e78;
-}
-
-#show-full-btn {
-  margin-top: 30px;
-  background: transparent;
-  border: 1px solid #fff5;
-  color: #fff;
-  padding: 8px 20px;
-  font-size: 0.95rem;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-#show-full-btn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-footer {
-  margin-top: auto;
-  padding-top: 30px;
-  font-size: 0.85rem;
-  color: #aaa;
-}
-
-@media (max-width: 480px) {
-  body {
-    padding: 20px 10px;
-  }
-
-  h1 {
-    font-size: 1.5rem;
-  }
-
-  input, button {
-    font-size: 1rem;
-    width: 90%;
+    display.innerText = `👋 Welcome, ${user.first_name}!\n\n🧠 Bot starts with: ${data.word}\n🎯 Score: ${data.score}`;
+    input.value = '';
+  } catch (err) {
+    display.innerText = '❌ Failed to start game. Please try again.';
   }
 }
+
+button.addEventListener('click', async () => {
+  const userWord = input.value.trim().toLowerCase();
+  if (!userWord) {
+    alert('Please enter a word!');
+    return;
+  }
+
+  try {
+    const res = await fetch(`${BACKEND_URL}/play`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        telegram_id: user.id,
+        username: user.username,
+        word: userWord
+      })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      display.innerText = `🤖 Bot replies: ${data.reply}\n🎯 Score: ${data.score}`;
+      input.value = '';
+      loadLeaderboard(); // update in case user entered high score
+    } else {
+      alert(data.error || data.message || 'Something went wrong.');
+    }
+  } catch (err) {
+    alert('⚠️ Error connecting to backend.');
+  }
+});
+
+async function loadLeaderboard() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/top`);
+    const data = await res.json();
+    const top3 = data.leaderboard.slice(0, 3);
+
+    leaderboardList.innerHTML = '';
+
+    top3.forEach((player, index) => {
+      const li = document.createElement('li');
+      li.textContent = `${index + 1}. ${player.username || 'Anonymous'} — ${player.score}`;
+      leaderboardList.appendChild(li);
+    });
+  } catch (err) {
+    console.error('Failed to load leaderboard:', err);
+  }
+}
+
+document.getElementById('show-full-btn').addEventListener('click', () => {
+  window.open(`${BACKEND_URL}/top`, '_blank');
+});
+
+window.addEventListener('load', () => {
+  startGame();
+  loadLeaderboard();
+});
