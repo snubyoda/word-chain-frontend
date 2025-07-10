@@ -1,27 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Word Chain Game</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>🔤 Word Chain Game</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <nav>
-    <a href="index.html">🏠 Home</a>
-    <a href="rules.html">📜 Rules</a>
-    <a href="leaderboard.html">🏆 Leaderboard</a>
-  </nav>
-
-  <main>
+  <div class="container">
     <h1>🔤 Word Chain Game</h1>
-    <p>Last letter: <span id="last-letter">?</span></p>
-    <input type="text" id="word-input" placeholder="Type your word..." />
-    <button id="submit-word">Submit</button>
-    <p class="hint" id="hint"></p>
-    <div class="score">Score: <span id="score">0</span></div>
-    <div class="message" id="message"></div>
-  </main>
+
+    <div id="game">
+      <p id="status">Start the game by entering a word!</p>
+
+      <form id="wordForm">
+        <input type="text" id="wordInput" placeholder="Type a word..." autocomplete="off" />
+        <button type="submit">Submit</button>
+      </form>
+
+      <ul id="wordList"></ul>
+
+      <p id="hint"></p>
+      <p id="score">Score: 0</p>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
