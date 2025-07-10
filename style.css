@@ -1,89 +1,59 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
+/* public/style.css */
 body {
-  font-family: 'Segoe UI', Tahoma, sans-serif;
-  background: linear-gradient(to bottom right, #1c1c1e, #2f2f30);
-  color: #f0f0f0;
-  padding: 30px 20px;
-  text-align: center;
-  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom right, #f0f8ff, #d3f3ff);
   display: flex;
-  flex-direction: column;
   justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
 }
 
-h1 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-  color: #ffd43b;
-}
-
-#game-display {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid #fff2;
-  padding: 15px;
-  margin-bottom: 15px;
-  font-size: 1.1rem;
-  border-radius: 10px;
-  white-space: pre-wrap;
-}
-
-#word-input {
-  padding: 12px;
-  width: 100%;
-  max-width: 300px;
-  font-size: 1rem;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  border: 1px solid #777;
+.container {
   text-align: center;
+  background: #ffffffcc;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 400px;
 }
 
-#submit-btn {
-  padding: 12px 24px;
-  background-color: #00b894;
+#game-area {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 2px solid #0077cc;
+}
+
+button {
+  padding: 12px 20px;
+  font-size: 16px;
+  background-color: #0077cc;
   color: white;
-  font-size: 1rem;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s ease;
-}
-#submit-btn:hover {
-  background-color: #009e78;
 }
 
-#result {
+button:hover {
+  background-color: #005fa3;
+}
+
+#feedback {
+  margin: 15px 0;
+  font-weight: bold;
+  color: #444;
+}
+
+#chainDisplay, #scoreDisplay {
   margin-top: 15px;
-  color: #ff7675;
-}
-
-#hint-box {
-  margin-top: 10px;
-  font-size: 0.95rem;
-  color: #a0cfff;
-}
-
-footer {
-  margin-top: auto;
-  padding-top: 20px;
-  font-size: 0.85rem;
-  color: #aaa;
-}
-
-@media (max-width: 480px) {
-  h1 {
-    font-size: 1.5rem;
-  }
-  #word-input {
-    font-size: 0.95rem;
-  }
-  #submit-btn {
-    width: 100%;
-    font-size: 1rem;
-  }
+  font-size: 18px;
 }
