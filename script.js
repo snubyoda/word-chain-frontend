@@ -1,50 +1,37 @@
-// public/script.js
+let lastLetter = '';
+let score = 0;
 
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("word-form");
-  const input = document.getElementById("word-input");
-  const log = document.getElementById("log");
-  const user = "Player1"; // Replace or dynamically generate if needed
-
-  // Handle Submit Button
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const word = input.value.trim();
-
-    if (!word) return;
-
-    try {
-      const response = await fetch("/submit-word", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ word, user }),
-      });
-
-      const result = await response.json();
-
-      const message = document.createElement("div");
-      message.textContent = result.message;
-      message.className = result.success ? "success" : "error";
-      log.prepend(message);
-    } catch (err) {
-      const errorMsg = document.createElement("div");
-      errorMsg.textContent = "❌ Server error. Please try again.";
-      errorMsg.className = "error";
-      log.prepend(errorMsg);
-      console.error(err);
-    }
-
-    input.value = "";
-    input.focus();
-  });
-
-  // Handle Enter key for mobile/desktop
-  input.addEventListener("keyup", (e) => {
-    if (e.key === "Enter") {
-      form.dispatchEvent(new Event("submit"));
-    }
-  });
+document.getElementById('submit-word').addEventListener('click', submitWord);
+document.getElementById('word-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') submitWord();
 });
+
+function submitWord() {
+  const word = document.getElementById('word-input').value.trim().toLowerCase();
+  if (!word) return;
+
+  fetch('/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ word, lastLetter }),
+  })
+    .then(res => res.json())
+    .then(data => {
+      const msg = document.getElementById('message');
+      if (data.valid) {
+        score++;
+        lastLetter = word.slice(-1);
+        document.getElementById('score').innerText = score;
+        document.getElementById('last-letter').innerText = lastLetter.toUpperCase();
+        msg.innerText = '✅ Good one!';
+        msg.style.color = 'green';
+        if (data.hint) {
+          document.getElementById('hint').innerText = `Hint: ${data.hint}`;
+        }
+      } else {
+        msg.innerText = `❌ ${data.message}`;
+        msg.style.color = 'red';
+      }
+      document.getElementById('word-input').value = '';
+    });
+}
