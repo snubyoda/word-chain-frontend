@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Leaderboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav>
+    <a href="index.html">🏠 Home</a>
+    <a href="rules.html">📜 Rules</a>
+    <a href="leaderboard.html">🏆 Leaderboard</a>
+  </nav>
+
+  <main>
+    <h1>🏆 Top Players</h1>
+    <ol id="leaderboard"></ol>
+  </main>
+
+  <script>
+    fetch('/leaderboard')
+      .then(res => res.json())
+      .then(data => {
+        const board = document.getElementById('leaderboard');
+        board.innerHTML = data.map(user => `<li>${user.name} - ${user.score} pts</li>`).join('');
+      });
+  </script>
+</body>
+</html>
