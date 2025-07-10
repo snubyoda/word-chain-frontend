@@ -1,39 +1,50 @@
 // public/script.js
-const wordInput = document.getElementById("wordInput");
-const submitBtn = document.getElementById("submitBtn");
-const feedback = document.getElementById("feedback");
-const chain = document.getElementById("chain");
-const score = document.getElementById("score");
 
-function submitWord() {
-  const word = wordInput.value.trim();
-  if (!word) return;
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("word-form");
+  const input = document.getElementById("word-input");
+  const log = document.getElementById("log");
+  const user = "Player1"; // Replace or dynamically generate if needed
 
-  fetch('/submit', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ word })
-  })
-    .then(res => res.json())
-    .then(data => {
-      feedback.textContent = data.message;
-      feedback.style.color = data.success ? "green" : "red";
+  // Handle Submit Button
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-      if (data.success) {
-        chain.textContent = data.chain.join(" ➡️ ");
-        score.textContent = data.score;
-        wordInput.value = '';
-        wordInput.focus();
-      }
-    });
-}
+    const word = input.value.trim();
 
-// Click Submit button
-submitBtn.addEventListener('click', submitWord);
+    if (!word) return;
 
-// Press Enter key
-wordInput.addEventListener('keypress', function (e) {
-  if (e.key === 'Enter') {
-    submitWord();
-  }
+    try {
+      const response = await fetch("/submit-word", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ word, user }),
+      });
+
+      const result = await response.json();
+
+      const message = document.createElement("div");
+      message.textContent = result.message;
+      message.className = result.success ? "success" : "error";
+      log.prepend(message);
+    } catch (err) {
+      const errorMsg = document.createElement("div");
+      errorMsg.textContent = "❌ Server error. Please try again.";
+      errorMsg.className = "error";
+      log.prepend(errorMsg);
+      console.error(err);
+    }
+
+    input.value = "";
+    input.focus();
+  });
+
+  // Handle Enter key for mobile/desktop
+  input.addEventListener("keyup", (e) => {
+    if (e.key === "Enter") {
+      form.dispatchEvent(new Event("submit"));
+    }
+  });
 });
