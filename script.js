@@ -1,59 +1,39 @@
-const tg = window.Telegram.WebApp;
-const user = tg.initDataUnsafe.user;
+// public/script.js
+const wordInput = document.getElementById("wordInput");
+const submitBtn = document.getElementById("submitBtn");
+const feedback = document.getElementById("feedback");
+const chain = document.getElementById("chain");
+const score = document.getElementById("score");
 
-const display = document.getElementById('game-display');
-const input = document.getElementById('word-input');
-const button = document.getElementById('submit-btn');
-const result = document.getElementById('result');
-const hintBox = document.getElementById('hint-box');
+function submitWord() {
+  const word = wordInput.value.trim();
+  if (!word) return;
 
-const BACKEND_URL = 'https://your-backend.replit.dev'; // 🔁 Replace with yours
+  fetch('/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ word })
+  })
+    .then(res => res.json())
+    .then(data => {
+      feedback.textContent = data.message;
+      feedback.style.color = data.success ? "green" : "red";
 
-async function startGame() {
-  try {
-    const res = await fetch(`${BACKEND_URL}/start`, {
-      method: 'GET',
-      credentials: 'include'
+      if (data.success) {
+        chain.textContent = data.chain.join(" ➡️ ");
+        score.textContent = data.score;
+        wordInput.value = '';
+        wordInput.focus();
+      }
     });
-    const data = await res.json();
-
-    display.innerText = `👋 Welcome, ${user?.first_name || 'player'}!\n\n🤖 Bot starts with: ${data.word}\n🎯 Score: ${data.score}`;
-    hintBox.innerText = '';
-    input.value = '';
-  } catch (err) {
-    display.innerText = '❌ Failed to start game.';
-  }
 }
 
-button.addEventListener('click', async () => {
-  const word = input.value.trim().toLowerCase();
-  if (!word) return alert('Enter a word first!');
+// Click Submit button
+submitBtn.addEventListener('click', submitWord);
 
-  try {
-    const res = await fetch(`${BACKEND_URL}/play`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        telegram_id: user.id,
-        username: user.username,
-        word
-      })
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      display.innerText = `🤖 Bot replies: ${data.reply}\n🎯 Score: ${data.score}`;
-      input.value = '';
-      result.innerText = '';
-      hintBox.innerText = data.definition ? `💡 Hint: ${data.definition}` : '';
-    } else {
-      result.innerText = `❌ ${data.message || 'Invalid word'}`;
-    }
-  } catch {
-    result.innerText = '⚠️ Server unreachable.';
+// Press Enter key
+wordInput.addEventListener('keypress', function (e) {
+  if (e.key === 'Enter') {
+    submitWord();
   }
 });
-
-window.addEventListener('load', startGame);
