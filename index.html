@@ -1,26 +1,31 @@
+<!-- public/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Word Chain Game</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>🧠 Word Chain Game</h1>
+  <div class="container">
+    <h1>🔤 Word Chain Game</h1>
+    <p>Start typing your word and press Enter or click Submit!</p>
 
-  <div id="game-display">Loading the first word…</div>
+    <div id="game-area">
+      <input type="text" id="wordInput" placeholder="Enter a word..." autofocus>
+      <button id="submitBtn">Submit</button>
+    </div>
 
-  <input id="word-input" type="text" placeholder="Enter your word…" autocomplete="off" />
-  <button id="submit-btn">Submit</button>
+    <p id="feedback"></p>
 
-  <div id="hint-box"></div>
-  <div id="result"></div>
+    <div id="chainDisplay">
+      <strong>Chain:</strong> <span id="chain"></span>
+    </div>
 
-  <footer>
-    <p>Powered by Telegram Mini App & Replit ⚡️</p>
-  </footer>
+    <div id="scoreDisplay">
+      <strong>Score:</strong> <span id="score">0</span>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
