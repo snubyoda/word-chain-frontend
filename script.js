@@ -1,37 +1,54 @@
-let lastLetter = '';
-let score = 0;
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('wordForm');
+  const input = document.getElementById('wordInput');
+  const status = document.getElementById('status');
+  const list = document.getElementById('wordList');
+  const scoreEl = document.getElementById('score');
+  const hint = document.getElementById('hint');
 
-document.getElementById('submit-word').addEventListener('click', submitWord);
-document.getElementById('word-input').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') submitWord();
-});
+  let score = 0;
 
-function submitWord() {
-  const word = document.getElementById('word-input').value.trim().toLowerCase();
-  if (!word) return;
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-  fetch('/submit', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ word, lastLetter }),
-  })
-    .then(res => res.json())
-    .then(data => {
-      const msg = document.getElementById('message');
+    const word = input.value.trim().toLowerCase();
+    if (!word) return;
+
+    try {
+      const res = await fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ word })
+      });
+
+      const data = await res.json();
+
       if (data.valid) {
+        const li = document.createElement('li');
+        li.textContent = word;
+        list.appendChild(li);
+
+        status.textContent = `✅ Good one! Next letter: ${data.nextLetter.toUpperCase()}`;
         score++;
-        lastLetter = word.slice(-1);
-        document.getElementById('score').innerText = score;
-        document.getElementById('last-letter').innerText = lastLetter.toUpperCase();
-        msg.innerText = '✅ Good one!';
-        msg.style.color = 'green';
-        if (data.hint) {
-          document.getElementById('hint').innerText = `Hint: ${data.hint}`;
-        }
+        scoreEl.textContent = `Score: ${score}`;
+        hint.textContent = '';
       } else {
-        msg.innerText = `❌ ${data.message}`;
-        msg.style.color = 'red';
+        status.textContent = `❌ ${data.reason}`;
+        hint.textContent = data.hint ? `💡 Hint: ${data.hint}` : '';
       }
-      document.getElementById('word-input').value = '';
-    });
-}
+
+      input.value = '';
+      input.focus();
+    } catch (err) {
+      console.error('Error:', err);
+      status.textContent = '⚠️ Server error. Try again.';
+    }
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // prevent default browser submit
+      form.dispatchEvent(new Event('submit'));
+    }
+  });
+});
